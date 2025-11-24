@@ -1,0 +1,44 @@
+.hud-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 800;
+    width: 100%;
+    max-width: 400px;
+    pointer-events: none; /* Don't block clicks on the game */
+}
+
+.quest-tracker {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+
+    h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+    }
+
+    p {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.9rem;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        background-color: #333;
+        border-radius: 4px;
+        height: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background-color: #1abc9c; /* Teal progress */
+        transition: width 0.3s ease;
+    }
+}

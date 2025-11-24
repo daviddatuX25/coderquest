@@ -1,4 +1,7 @@
-@import './styles/dialog.scss';
+@use './styles/dialog.scss';
+@use './styles/lesson.scss';
+@use './styles/quiz.scss';
+@use './styles/hud.scss';
 
 #game-container {
     position: relative;

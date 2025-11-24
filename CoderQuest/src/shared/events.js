@@ -4,6 +4,7 @@ export const EVENTS = {
     LESSON_SHOW: 'lesson:show',
     QUIZ_SHOW: 'quiz:show',
     DIALOG_SHOW: 'dialog:show',
+    QUEST_COMPLETE: 'quest:complete',
 
     // UI -> Game Events
     MILESTONE_COMPLETE: 'milestone:complete',

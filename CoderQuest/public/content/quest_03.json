@@ -1,0 +1,52 @@
+{
+  "questId": "quest_03",
+  "title": "Arrays and Loops",
+  "description": "Master arrays and learn how to loop through them.",
+  "rewards": {
+    "xp": 200,
+    "items": ["silver_badge"]
+  },
+  "prerequisites": ["quest_02"],
+  "milestones": [
+    {
+      "milestoneId": "lesson_arrays_01",
+      "type": "lesson",
+      "title": "Working with Arrays",
+      "content": "<h1>Introduction to Arrays</h1><p>An <b>array</b> is a special variable, which can hold more than one value at a time. If you have a list of items (a list of car names, for example), storing the cars in single variables could look like this: <code>let car1 = 'Saab'; let car2 = 'Volvo';</code></p><p>However, what if you want to loop through the cars and find a specific one? And what if you had not 2, but 200 cars? The solution is an array!</p><h2>Example:</h2><p><code>let cars = ['Saab', 'Volvo', 'BMW'];</code></p><p>You can access an element by referring to its index number: <code>let firstCar = cars[0];</code></p>"
+    },
+    {
+      "milestoneId": "lesson_loops_01",
+      "type": "lesson",
+      "title": "Looping through Arrays",
+      "content": "<h1>For Loops</h1><p>Loops are handy if you want to run the same code over and over again, each time with a different value.</p><p>The <code>for</code> loop is often the tool you will use when you want to iterate over an array.</p><h2>Example:</h2><p><code>for (let i = 0; i < cars.length; i++) { text += cars[i] + '<br>'; }</code></p>"
+    },
+    {
+      "milestoneId": "quiz_arrays_loops_01",
+      "type": "quiz",
+      "title": "Quiz: Arrays and Loops",
+      "questions": [
+        {
+          "questionText": "How do you access the first element of an array named 'myArray'?",
+          "options": [
+            "myArray[1]",
+            "myArray.first()",
+            "myArray[0]",
+            "myArray.get(0)"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "questionText": "Which loop is best suited for iterating through all elements of an array?",
+          "options": [
+            "A `while` loop",
+            "A `for` loop",
+            "An `if` statement",
+            "A `switch` statement"
+          ],
+          "correctIndex": 1
+        }
+      ],
+      "passingScore": 2
+    }
+  ]
+}

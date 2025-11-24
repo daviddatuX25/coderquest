@@ -1,0 +1,28 @@
+{
+    "dialogId": "dialog_helper",
+    "npcId": "npc_helper_01",
+    "dialogTree": {
+      "start": {
+        "text": "Hey there! Looks like you're on a quest. Need a hint?",
+        "choices": [
+          {
+            "text": "Yes, please!",
+            "next": "give_hint"
+          },
+          {
+            "text": "No thanks, I'm good.",
+            "next": "end"
+          }
+        ]
+      },
+      "give_hint": {
+        "text": "Remember to look for the glowing portals to start new quests. Each one holds a new challenge!",
+        "choices": [
+            {
+                "text": "Thanks for the tip!",
+                "next": "end"
+            }
+        ]
+      }
+    }
+  }

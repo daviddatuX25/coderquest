@@ -1,0 +1,50 @@
+{
+  "questId": "quest_01",
+  "title": "Introduction to Variables",
+  "description": "Learn the basics of variables in programming.",
+  "rewards": {
+    "xp": 100,
+    "items": ["bronze_badge"]
+  },
+  "prerequisites": [],
+  "milestones": [
+    {
+      "milestoneId": "lesson_variables_01",
+      "type": "lesson",
+      "title": "What are Variables?",
+      "content": "<h1>Understanding Variables</h1><p>In programming, a <b>variable</b> is a storage location paired with an associated symbolic name (an identifier), which contains some known or unknown quantity of information referred to as a <b>value</b>.</p><p>Think of a variable as a container or a box where you can store data. This data can change during the execution of a program.</p><h2>Example:</h2><p><code>let score = 0;</code></p><p>Here, 'score' is the variable name, and '0' is its initial value. You can later change 'score' to a new value, like <code>score = 100;</code></p>",
+      "completionMessage": "You've completed the lesson on variables!"
+    },
+    {
+      "milestoneId": "quiz_variables_01",
+      "type": "quiz",
+      "title": "Quiz: Variables Basics",
+      "questions": [
+        {
+          "questionText": "What is the primary purpose of a variable in programming?",
+          "options": [
+            "To perform complex calculations.",
+            "To store and manage data.",
+            "To display images on the screen.",
+            "To control the program's flow."
+          ],
+          "correctIndex": 1,
+          "explanation": "Variables are used to store data that can be referenced and manipulated throughout a program."
+        },
+        {
+          "questionText": "Which of the following is a valid way to declare a variable and assign it a value?",
+          "options": [
+            "variable = 'hello';",
+            "assign 'hello' to variable;",
+            "let message = 'hello';",
+            "message: 'hello';"
+          ],
+          "correctIndex": 2,
+          "explanation": "In many languages like JavaScript, 'let' (or 'var'/'const') is used to declare a variable, followed by its name, an assignment operator, and its value."
+        }
+      ],
+      "passingScore": 1,
+      "completionMessage": "You passed the variables quiz! Great job!"
+    }
+  ]
+}

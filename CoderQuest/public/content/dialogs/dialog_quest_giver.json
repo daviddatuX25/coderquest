@@ -1,0 +1,32 @@
+{
+    "dialogId": "dialog_quest_giver",
+    "npcId": "npc_quest_giver_01",
+    "dialogTree": {
+      "start": {
+        "text": "Greetings, coder. I see you've been making progress. Are you ready for a real challenge?",
+        "choices": [
+          {
+            "text": "I'm ready for anything!",
+            "next": "quest_offer"
+          },
+          {
+            "text": "I need more practice.",
+            "next": "come_back_later"
+          }
+        ]
+      },
+      "quest_offer": {
+        "text": "Excellent. I have two new quests for you. One on Functions and another on Arrays. Seek the new portals that have appeared.",
+        "choices": [
+            {
+                "text": "I will find them!",
+                "next": "end"
+            }
+        ]
+      },
+      "come_back_later": {
+          "text": "Confidence is key. Return when you feel you are ready.",
+          "choices": []
+      }
+    }
+  }
