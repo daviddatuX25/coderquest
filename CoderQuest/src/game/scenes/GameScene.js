@@ -76,7 +76,7 @@ class GameScene extends Phaser.Scene {
         };
         this.interactionKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
-        this.interactionPrompt = this.add.text(0, 0, 'Press E', { fontSize: '12px', fill: '#ffffff' }).setOrigin(0.5).setVisible(false);
+        this.interactionPrompt = this.add.text(0, 0, 'Press E', { fontSize: '12px', fill: '#ffffff' }).setOrigin(0.5, 1).setVisible(false);
 
         this.npcs = this.physics.add.group({ immovable: true });
         this.portals = this.physics.add.group({ immovable: true });
@@ -94,6 +94,8 @@ class GameScene extends Phaser.Scene {
             }
         });
         
+        this.physics.add.collider(this.player, this.npcs);
+
         // Event Listeners
         EventBus.on(EVENTS.MILESTONE_COMPLETE, () => this.questManager.completeMilestone());
         EventBus.on(EVENTS.QUEST_COMPLETE, () => this.saveManager.saveGame(this.player, this.questManager));
