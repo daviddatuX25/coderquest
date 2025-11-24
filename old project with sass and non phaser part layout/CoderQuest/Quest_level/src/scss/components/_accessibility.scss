@@ -1,0 +1,7 @@
+@use '../globals' as *;
+
+.icon-btn:focus,
+.btn:focus,
+.nav-item:focus {
+  outline: 2px solid rgba($accent-2, 0.16);
+}

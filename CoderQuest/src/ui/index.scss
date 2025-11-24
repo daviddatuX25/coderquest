@@ -1,0 +1,46 @@
+/* Global styles, resets, and typography */
+:root {
+    /* Define CSS variables for colors, fonts, etc. here */
+    --game-font: 'Press Start 2P', cursive; /* Example retro game font */
+    --text-color-light: #eee;
+    --text-color-dark: #333;
+    --primary-button-bg: #4CAF50;
+    --primary-button-text: white;
+}
+
+/* Basic Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body, #root {
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling, as the game will manage its own view */
+    font-family: var(--game-font);
+    color: var(--text-color-light);
+    background-color: #1a1a1a; /* Dark background for the game */
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Basic button styles */
+button {
+    font-family: var(--game-font);
+    cursor: pointer;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        filter: brightness(1.2);
+    }
+}

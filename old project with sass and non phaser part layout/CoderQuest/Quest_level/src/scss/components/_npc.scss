@@ -1,0 +1,24 @@
+@use '../globals' as *;
+
+.npc-pin {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 170px;
+  flex: none;
+
+  .avatar{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+}
+
+.npc-avatar {
+    border-radius: 10px;
+    object-fit: contain;
+    image-rendering: pixelated;
+}

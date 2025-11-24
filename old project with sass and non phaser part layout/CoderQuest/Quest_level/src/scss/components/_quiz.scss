@@ -1,0 +1,45 @@
+@use '../globals' as *;
+
+.question, .question-progress, .question-text  { margin-bottom: 14px; }
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choice {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+  cursor: pointer;
+  background: transparent;
+
+  &.selected {
+    outline: 2px solid rgba(99,102,241,0.18);
+    background: rgba(99,102,241,0.03);
+  }
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.result {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+
+  &.correct {
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.12);
+    color: var(--accent);
+  }
+
+  &.incorrect {
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.06);
+    color: #ffb3c1;
+  }
+}

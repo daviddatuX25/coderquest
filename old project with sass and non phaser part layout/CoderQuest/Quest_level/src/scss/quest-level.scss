@@ -1,0 +1,20 @@
+@use 'globals' as *;
+
+// 2. Base styles
+@use 'base/reset';
+
+// 3. Layout
+@use 'layouts/responsive';
+
+// 4. Components
+@use 'components/buttons';
+@use 'components/sidebar';
+@use 'components/nav';
+@use 'components/footer';
+@use 'components/npc';
+@use 'components/content';
+@use 'components/quiz';
+@use 'components/dropdown';
+@use 'components/container';
+@use 'components/accessibility';
+@use 'components/header';

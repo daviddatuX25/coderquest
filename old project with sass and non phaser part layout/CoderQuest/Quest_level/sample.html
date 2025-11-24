@@ -1,0 +1,357 @@
+<!-- FILE: index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>quest_levels — CoderQuest</title>
+
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x/dist/cdn.min.js"></script>
+
+  <!-- Inline CSS for demo (compiled from quest_levels.scss). Extract/compile SCSS separately for production. -->
+  <style>
+:root{--bg:#0b1220;--panel:rgba(12,16,24,0.92);--muted:#9aa7bd;--accent:#10b981;--accent-2:#6366f1;--text:#e6eef8;--glass-border:rgba(148,163,184,0.10);--radius:14px}
+*{box-sizing:border-box}
+html,body,#app{height:100%}
+body{margin:0;background:radial-gradient(ellipse at bottom right, rgba(99,102,241,0.04), transparent 20%),var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:var(--text);}
+.app{max-width:1150px;margin:18px auto;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid var(--glass-border);height:calc(100vh - 36px);display:flex;flex-direction:column;padding:16px}
+.header{display:flex;gap:12px;align-items:center}
+.icon-btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--glass-border);display:inline-flex;align-items:center;justify-content:center;background:transparent;color:var(--text);font-weight:700}
+.hamburger{display:inline-flex}
+@media(min-width:900px){.hamburger{display:none}}
+.title{flex:1;font-weight:700}
+.top-controls{display:flex;gap:8px;align-items:center}
+.container{display:flex;flex:1;overflow:hidden;margin-top:12px}
+/* SIDEBAR */
+.sidebar{width:360px;padding:12px;display:flex;flex-direction:column;gap:12px;transition:width .22s ease;min-width:80px}
+.sidebar.collapsed{width:100px}
+.panel{background:var(--panel);border-radius:12px;padding:12px;border:1px solid var(--glass-border)}
+.nav-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 320px);overflow:auto}
+.nav-item{padding:10px;border-radius:8px;text-align:left;border-left:4px solid transparent;cursor:pointer;display:flex;flex-direction:column}
+.nav-item.locked{opacity:0.45;cursor:not-allowed}
+.nav-item.active{background:linear-gradient(90deg, rgba(99,102,241,0.06), rgba(16,185,129,0.02));border-left-color:var(--accent)}
+.nav-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar.collapsed .nav-label{display:none}
+.profile-pin{margin-top:auto;display:flex;align-items:center;justify-content:center;height:110px;flex:none}
+.profile-pin .avatar{width:72px;height:72px;border-radius:10px;object-fit:contain;image-rendering:pixelated}
+
+.main{flex:1;display:flex;flex-direction:column;gap:12px;padding:12px}
+.content-area{flex:1;overflow:auto;border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid var(--glass-border);color:var(--text)}
+.controls-desktop{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.controls{display:flex;align-items:center;gap:8px}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;cursor:pointer;color:var(--text)}
+.btn.primary{background:var(--accent);color:#07140a;font-weight:700}
+.btn.important{background:#f59e0b;color:#07140a}
+.footer-mobile{display:none}
+.question{margin-bottom:14px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);cursor:pointer;background:transparent}
+.choice.selected{outline:2px solid rgba(99,102,241,0.18);background:rgba(99,102,241,0.03)}
+.small{font-size:13px;color:var(--muted)}
+.result{margin-top:10px;padding:10px;border-radius:8px}
+.correct{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.12);color:var(--accent)}
+.incorrect{background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.06);color:#ffb3c1}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .controls-desktop{display:none}
+  .footer-mobile{display:block;margin-top:12px}
+  .app{padding:12px}
+}
+
+/* mobile dropdown (under header) */
+.mobile-dropdown{display:none}
+@media(max-width:900px){
+  .mobile-dropdown{display:block;position:relative;margin-top:8px}
+  .mobile-dropdown .dropdown-panel{position:absolute;left:0;right:0;top:0;background:var(--panel);border-radius:10px;padding:12px;border:1px solid var(--glass-border);box-shadow:0 6px 18px rgba(2,6,23,0.6);z-index:50}
+}
+
+/* accessibility focus */
+.icon-btn:focus,.btn:focus,.nav-item:focus{outline:2px solid rgba(99,102,241,0.16)}
+  </style>
+
+</head>
+<body>
+  <div id="app" class="app" x-data="questLevels()" x-init="loadSample()">
+
+    <header class="header">
+      <!-- Hamburger: mobile-only; toggles a dropdown that sits above main content -->
+      <button class="icon-btn hamburger" @click="toggleMobileNav = !toggleMobileNav" aria-label="Open navigation">☰</button>
+
+      <div class="title">CoderQuest — <span x-text="meta.title || 'Quest'"></span></div>
+
+      <div class="top-controls">
+        <!-- Desktop only: collapse sidebar toggle -->
+        <button class="icon-btn" x-show="!isMobile" @click="sidebarCollapsed = !sidebarCollapsed" x-text="sidebarCollapsed ? '›' : '‹'" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
+      </div>
+    </header>
+
+    <!-- Mobile dropdown placed under the header, above the main container. Uses click.away to close. -->
+    <div class="mobile-dropdown" x-show="toggleMobileNav" x-transition x-cloak>
+      <div class="dropdown-panel" @click.away="toggleMobileNav=false">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <strong>Navigation</strong>
+          <button class="icon-btn" @click="toggleMobileNav=false">✕</button>
+        </div>
+        <nav>
+          <ul class="nav-list">
+            <template x-for="(seg, idx) in segments" :key="seg.seg_name">
+              <li :class="['nav-item', currentIndex===idx ? 'active':'' , unlocked[idx] ? '':'locked']" @click="selectSegment(idx); toggleMobileNav=false" style="display:flex;gap:8px;align-items:center">
+                <div style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.02);font-size:13px"> <span x-text="seg.seg_name.split('-').join('').slice(0,2).toUpperCase()"></span></div>
+                <div>
+                  <div style="font-weight:700" x-text=" (seg.type.replace('quiz-','').toUpperCase() || seg.type)"></div>
+                  <div style="text-align: center;" class="small" x-text="seg.title || (seg.type==='topic' ? 'Lesson' : 'Quiz')"></div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- SIDEBAR (desktop) -->
+      <aside :class="['sidebar', sidebarCollapsed ? 'collapsed':'']" x-show="!isMobile" x-cloak>
+        <nav class="panel" style="display:flex;flex-direction:column;gap:8px">
+          <ul class="nav-list">
+            <template x-for="(seg, idx) in segments" :key="seg.seg_name">
+              <li :class="['nav-item', currentIndex===idx ? 'active':'' , unlocked[idx] ? '':'locked']"
+                  @click="selectSegment(idx)" tabindex="0">
+                <div style="display:flex;gap:8px;align-items:center">
+                  <div style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(255,255,255,0.02);font-size:13px"> <span x-text="seg.seg_name.split('-').join('').slice(0,2).toUpperCase()"></span></div>
+                  <div class="nav-label">
+                    <div style="font-weight:700;" x-text="(seg.type.replace('quiz-','').toUpperCase() || seg.type)"></div>
+                    <div class="small" x-text="seg.title || (seg.type==='topic' ? 'Lesson' : 'Quiz')"></div>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </nav>
+
+        <!-- pinned profile sprite at bottom of sidebar (static height) - remains visible when collapsed -->
+        <div class="panel profile-pin">
+          <div style="text-align:center">
+            <img src="https://placehold.co/72x72/png?text=👾" alt="sprite" class="avatar" />
+            <div class="small" style="margin-top:8px">Player</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN COLUMN -->
+      <main class="main">
+        <section class="content-area">
+
+          <!-- If no segments -->
+          <template x-if="segments.length===0">
+            <div class="small">No content — provide a quest JSON.</div>
+          </template>
+
+          <!-- TOPIC SEGMENT -->
+          <template x-if="currentSegment && currentSegment.type==='topic'">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+              <div class="small" x-html="currentSegment.content"></div>
+            </div>
+          </template>
+
+          <!-- QUIZ MULTICHOICE -->
+          <template x-if="currentSegment && currentSegment.type==='quiz-multichoice'">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+
+              <template x-for="(q, qi) in currentSegment['quiz-data'].questions" :key="q.qid">
+                <div class="question" x-show="qaIndex===qi">
+                  <div style="font-weight:700" x-text="(qi+1) + '. ' + q.question"></div>
+
+                  <div class="choices">
+                    <template x-for="(c, ci) in q.choices" :key="ci">
+                      <div class="choice" :class="userAnswers[q.qid]==ci ? 'selected':''" @click="selectChoice(q.qid,ci)" role="button" tabindex="0">
+                        <div x-text="c"></div>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="small" style="margin-top:8px">Question <span x-text="(qi+1) + '/' + currentSegment['quiz-data'].questions.length"></span></div>
+
+                  <div x-show="submitted[q.qid]" class="result" :class="correctMap[q.qid] ? 'correct':'incorrect'">
+                    <div x-text="correctMap[q.qid] ? 'Correct' : 'Incorrect'"></div>
+                    <div class="small" x-show="!correctMap[q.qid]" x-text="'Answer: ' + (q.answerDisplay || q.answer)"></div>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </template>
+
+          <!-- QUIZ IDENTIFICATION / FILLBLANKS -->
+          <template x-if="currentSegment && (currentSegment.type==='quiz-identification' || currentSegment.type==='quiz-fillblanks')">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+
+              <template x-for="(q, qi) in currentSegment['quiz-data'].questions" :key="q.qid">
+                <div class="question" x-show="qaIndex===qi">
+                  <div style="font-weight:700" x-text="(qi+1) + '. ' + q.question"></div>
+
+                  <input type="text" class="btn" placeholder="Type answer" x-model="userAnswers[q.qid]" style="width:100%;margin-top:8px" />
+
+                  <div x-show="submitted[q.qid]" class="result" :class="correctMap[q.qid] ? 'correct':'incorrect'">
+                    <div x-text="correctMap[q.qid] ? 'Correct' : 'Incorrect'"></div>
+                    <div class="small" x-show="!correctMap[q.qid]" x-text="'Answer: ' + (q.answerDisplay || q.answer)"></div>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </template>
+
+        </section>
+
+        <!-- DESKTOP CONTROLS (hidden on mobile) -->
+        <div class="controls-desktop" aria-hidden="false">
+          <div>
+            <button class="btn" @click="prev()" :disabled="!hasPrev">Prev</button>
+          </div>
+
+          <div class="controls">
+            <button class="btn important" x-show="isQuizSegment" @click="submitCurrent()" :disabled="submittedAnyCurrent">Submit</button>
+            <button class="btn primary" @click="next()" :disabled="!canNext">Next</button>
+          </div>
+        </div>
+
+        <!-- MOBILE FOOTER (only one set of mobile controls) -->
+        <div class="footer-mobile panel">
+          <div style="display:flex;align-items:center;gap:12px">
+            <img src="https://placehold.co/48x48/png?text=👾" alt="sprite" style="width:48px;height:48px;border-radius:8px" />
+            <div style="margin-left:auto;display:flex;gap:8px">
+              <button class="btn" @click="prev()">Prev</button>
+              <button class="btn primary" @click="next()">Next</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <script>
+  // For demo convenience the JS is embedded. You can copy this out to quest_levels.js
+  function questLevels(){
+    return {
+      meta: { title: 'Sample Quest' },
+      segments: [],
+      currentIndex: 0,
+      unlocked: [],
+      userAnswers: {},
+      submitted: {},
+      correctMap: {},
+      qaIndex: 0, // which question index in current quiz is shown
+      toggleMobileNav: false,
+      sidebarCollapsed: false,
+      get isMobile(){ return window.innerWidth <= 900 },
+
+      // helpers
+      get currentSegment(){ return this.segments[this.currentIndex] },
+      get isQuizSegment(){ const s=this.currentSegment; if(!s) return false; return s.type && s.type.indexOf('quiz')===0 },
+      get hasPrev(){ return this.currentIndex>0 },
+      get canNext(){
+        if(this.currentIndex>=this.segments.length-1) return false
+        if(!this.currentSegment) return true
+        if(this.isQuizSegment){
+          const qs=this.currentSegment['quiz-data'].questions
+          for(const q of qs) if(!this.submitted[q.qid]) return false
+          return true
+        }
+        return true
+      },
+      get submittedAnyCurrent(){ if(!this.currentSegment || !this.isQuizSegment) return false; const qs=this.currentSegment['quiz-data'].questions; for(const q of qs) if(this.submitted[q.qid]) return true; return false },
+
+      // loading
+      load(json){
+        if(!json || !json.quest_level || !Array.isArray(json.quest_level.segments)){ this.segments=[]; return }
+        this.segments = json.quest_level.segments.map(s=>{ s.title = s.title || s.seg_name; return s })
+        this.unlocked = this.segments.map((s,i)=> i===0)
+        this.currentIndex = 0
+        this.qaIndex = 0
+        this.userAnswers = {}
+        this.submitted = {}
+        this.correctMap = {}
+      },
+
+      // sample loader for demo
+      loadSample(){
+        const sample = {
+          quest_level:{
+            segments:[
+              {type:'topic',seg_name:'t1',title:'Intro',content:'<p>This is a short lesson. It can contain <strong>HTML</strong>, images or code blocks.</p>'},
+              {type:'quiz-multichoice',seg_name:'q1',title:'Simple Quiz', 'quiz-data':{
+                questions:[
+                  {qid:101,question:'Which language runs in a browser?',choices:['Node.js','Python','JavaScript','C++'],answer:2,answerDisplay:'JavaScript'},
+                  {qid:102,question:'What does CSS stand for?',choices:['Central Style Sheets','Cascading Style Sheets','Cascading Simple Sheets','Computer Style Sheets'],answer:1,answerDisplay:'Cascading Style Sheets'}
+                ]
+              }},
+              {type:'quiz-identification',seg_name:'q2',title:'Identify', 'quiz-data':{
+                questions:[{qid:201,question:'Name a JS framework for UI', answer:['react','vue','angular'], answerDisplay:'React / Vue / Angular'}]
+              }},
+              {type:'quiz-fillblanks',seg_name:'q3',title:'Fill in the blank', 'quiz-data':{
+                questions:[{qid:301,question:'The color of the sky (simple)', answer:'blue',answerDisplay:'blue'}]
+              }},
+              {type:'topic',seg_name:'conclusion',title:'Conclusion',content:'<p>Well done! This is the conclusion segment.</p>'}
+            ]
+          }
+        }
+        this.load(sample)
+      },
+
+      // navigation
+      selectSegment(idx){ if(!this.unlocked[idx]) return; this.currentIndex = idx; this.qaIndex = 0 },
+      prev(){ if(this.currentIndex>0) this.currentIndex--; this.qaIndex = 0 },
+      next(){ if(this.currentIndex>=this.segments.length-1) return; if(!this.canNext) return; this.unlocked[this.currentIndex+1]=true; this.currentIndex++; this.qaIndex = 0 },
+
+      // quiz interactions
+      selectChoice(qid,ci){ this.userAnswers[qid]=ci },
+
+      submitCurrent(){
+        const s = this.currentSegment
+        if(!s || !this.isQuizSegment) return
+        const qs = s['quiz-data'].questions
+        for(const q of qs){
+          if(this.submitted[q.qid]) continue
+          if(s.type==='quiz-multichoice'){
+            const selected = this.userAnswers[q.qid]
+            const correctIndex = q.answer
+            const ok = (selected===correctIndex)
+            this.submitted[q.qid]=true
+            this.correctMap[q.qid]=ok
+          } else if(s.type==='quiz-fillblanks'){
+            const val = (this.userAnswers[q.qid] || '').trim()
+            const ok = val===q.answer
+            this.submitted[q.qid]=true
+            this.correctMap[q.qid]=ok
+          } else if(s.type==='quiz-identification'){
+            const val = (this.userAnswers[q.qid] || '').toLowerCase()
+            let ok=false
+            if(Array.isArray(q.answer)){
+              for(const a of q.answer){ if(val.indexOf(a.toLowerCase())!==-1){ ok=true; break }}
+            } else {
+              ok = val.indexOf((q.answer||'').toLowerCase())!==-1
+            }
+            this.submitted[q.qid]=true
+            this.correctMap[q.qid]=ok
+          }
+        }
+        // unlock next if all submitted
+        let allSubmitted=true
+        for(const q of qs) if(!this.submitted[q.qid]) allSubmitted=false
+        if(allSubmitted) this.unlocked[this.currentIndex+1]=true
+      }
+    }
+  }
+  </script>
+
+</body>
+</html>
+

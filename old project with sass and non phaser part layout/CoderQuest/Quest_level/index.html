@@ -1,0 +1,190 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>quest_levels — CoderQuest</title>
+
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x/dist/cdn.min.js"></script>
+
+  <!-- Link to external CSS (compiled from SCSS) -->
+  <link rel="stylesheet" href="./dist/css/quest-level.css" />
+</head>
+<body>
+  <div id="app" class="app" x-data="questLevels()" x-init="loadSample()">
+
+    <header class="header">
+      <!-- Hamburger: mobile-only; toggles a dropdown that sits above main content -->
+      <button class="icon-btn hamburger" @click="toggleMobileNav = !toggleMobileNav" aria-label="Open navigation">☰</button>
+
+      <div class="title">Quest — <span x-text="meta.title || 'Quest'"></span></div>
+
+      <div class="top-controls">
+        <!-- Desktop only: collapse sidebar toggle -->
+        <button class="icon-btn" x-show="!isMobile" @click="sidebarCollapsed = !sidebarCollapsed" x-text="sidebarCollapsed ? '›' : '‹'" aria-label="Toggle sidebar" title="Toggle sidebar"></button>
+      </div>
+    </header>
+
+    <!-- Mobile dropdown placed under the header, above the main container. Uses click.away to close. -->
+    <div class="mobile-dropdown" x-show="toggleMobileNav" x-transition x-cloak>
+      <div class="dropdown-panel" @click.away="toggleMobileNav=false">
+        <div class="dropdown-header">
+          <strong>Navigation</strong>
+          <button class="icon-btn" @click="toggleMobileNav=false">✕</button>
+        </div>
+        <nav>
+          <ul class="nav-list">
+            <template x-for="(seg, idx) in segments" :key="seg.seg_name">
+              <li :class="['nav-item', currentIndex===idx ? 'active':'' , unlocked[idx] ? '':'locked']" @click="selectSegment(idx); toggleMobileNav=false">
+                <div class="nav-item-content">
+                  <div class="nav-icon"> <span x-text="seg.seg_name.split('-').join('').slice(0,2).toUpperCase()"></span></div>
+                  <div>
+                    <div class="nav-type" x-text=" (seg.type.replace('quiz-','').toUpperCase() || seg.type)"></div>
+                    <div class="nav-title small" x-text="seg.title || (seg.type==='topic' ? 'Lesson' : 'Quiz')"></div>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- SIDEBAR (desktop) -->
+      <aside :class="['sidebar', sidebarCollapsed ? 'collapsed':'']" x-show="!isMobile" x-cloak>
+        <nav class="panel nav-panel">
+          <ul class="nav-list">
+            <template x-for="(seg, idx) in segments" :key="seg.seg_name">
+              <li :class="['nav-item', currentIndex===idx ? 'active':'' , unlocked[idx] ? '':'locked']"
+                  @click="selectSegment(idx)" tabindex="0">
+                <div class="nav-item-content">
+                  <div class="nav-icon"> <span x-text="seg.seg_name.split('-').join('').slice(0,2).toUpperCase()"></span></div>
+                  <div class="nav-label">
+                    <div class="nav-type" x-text="(seg.type.replace('quiz-','').toUpperCase() || seg.type)"></div>
+                    <div class="small" x-text="seg.title || (seg.type==='topic' ? 'Lesson' : 'Quiz')"></div>
+                  </div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </nav>
+
+        <!-- pinned profile sprite at bottom of sidebar (static height) - remains visible when collapsed -->
+        <div class="panel npc-pin">
+          <div class="avatar">
+            <img src="https://placehold.co/72x72/png?text=👾" alt="sprite" class="avatar" />
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN COLUMN -->
+      <main class="main">
+        <section class="content-area">
+
+          <!-- If no segments -->
+          <template x-if="segments.length===0">
+            <div class="small">No content — provide a quest JSON.</div>
+          </template>
+
+          <!-- TOPIC SEGMENT -->
+          <template x-if="currentSegment && currentSegment.type==='topic'">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+              <div class="small" x-html="currentSegment.content"></div>
+            </div>
+          </template>
+
+          <!-- QUIZ MULTICHOICE -->
+          <template x-if="currentSegment && currentSegment.type==='quiz-multichoice'">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+
+              <template x-for="(q, qi) in currentSegment['quiz-data'].questions" :key="q.qid">
+                <div class="question" x-show="qaIndex===qi">
+                  <div class="question-text" x-text="(qi+1) + '. ' + q.question"></div>
+
+                  <div class="choices">
+                    <template x-for="(c, ci) in q.choices" :key="ci">
+                      <div class="choice" :class="userAnswers[q.qid]==ci ? 'selected':''" @click="selectChoice(q.qid,ci)" role="button" tabindex="0">
+                        <div x-text="c"></div>
+                      </div>
+                    </template>
+                  </div>
+
+                  <div class="question-progress small">Question <span x-text="(qi+1) + '/' + currentSegment['quiz-data'].questions.length"></span></div>
+
+                  <div x-show="submitted[q.qid]" class="result" :class="correctMap[q.qid] ? 'correct':'incorrect'">
+                    <div x-text="correctMap[q.qid] ? 'Correct' : 'Incorrect'"></div>
+                    <div class="small" x-show="!correctMap[q.qid]" x-text="'Answer: ' + (q.answerDisplay || q.answer)"></div>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </template>
+
+          <!-- QUIZ IDENTIFICATION / FILLBLANKS -->
+          <template x-if="currentSegment && (currentSegment.type==='quiz-identification' || currentSegment.type==='quiz-fillblanks')">
+            <div>
+              <h2 x-text="currentSegment.title || currentSegment.seg_name" style="color:var(--accent-2)"></h2>
+
+              <template x-for="(q, qi) in currentSegment['quiz-data'].questions" :key="q.qid">
+                <div class="question" x-show="qaIndex===qi">
+                  <div class="question-text" x-text="(qi+1) + '. ' + q.question"></div>
+
+                  <input type="text" class="btn input-answer" placeholder="Type answer" x-model="userAnswers[q.qid]" />
+
+                  <div x-show="submitted[q.qid]" class="result" :class="correctMap[q.qid] ? 'correct':'incorrect'">
+                    <div x-text="correctMap[q.qid] ? 'Correct' : 'Incorrect'"></div>
+                    <div class="small" x-show="!correctMap[q.qid]" x-text="'Answer: ' + (q.answerDisplay || q.answer)"></div>
+                  </div>
+                </div>
+              </template>
+
+            </div>
+          </template>
+
+        </section>
+
+        <!-- DESKTOP CONTROLS (hidden on mobile) -->
+        <div class="controls-desktop" aria-hidden="false">
+          <div>
+            <button class="btn" @click="prev()" :disabled="!hasPrev">Go back</button>
+          </div>
+
+          <div class="controls">
+            <button class="btn important" x-show="isQuizSegment" @click="submitCurrent()" :disabled="submittedAnyCurrent">Submit</button>
+            <button class="btn primary" @click="next()" :disabled="!canNext">Proceed</button>
+          </div>
+        </div>
+
+        <!-- MOBILE FOOTER (only one set of mobile controls) -->
+        <div class="footer-mobile panel">
+          <div class="footer-content">
+            <!-- Avatar (Left 50%) -->
+            <div class="npc-avatar">
+              <img src="https://placehold.co/72x72/png?text=👾" alt="sprite" class="avatar" />
+            </div>
+
+            <!-- Stacked Buttons (Right 50%) -->
+            <div class="footer-controls">
+              <button class="btn" @click="prev()">Go back</button>
+              <button class="btn primary" @click="next()">Proceed</button>
+            </div>
+          </div>
+        </div>
+
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- External JS -->
+  <script src="./src/js/quest-level.js"></script>
+</body>
+</html>

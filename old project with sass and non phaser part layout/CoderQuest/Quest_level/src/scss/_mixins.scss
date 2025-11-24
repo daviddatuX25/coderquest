@@ -1,0 +1,27 @@
+@use 'variables' as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin panel {
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid var(--glass-border);
+}
+
+@mixin button-base {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  cursor: pointer;
+  color: var(--text);
+}
+
+@mixin focus-outline {
+  outline: 2px solid rgba(99,102,241,0.16);
+}

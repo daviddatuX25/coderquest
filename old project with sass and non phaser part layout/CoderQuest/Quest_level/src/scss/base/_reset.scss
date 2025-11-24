@@ -1,0 +1,34 @@
+@use '../globals' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at bottom right, rgba(99,102,241,0.04), transparent 20%), var(--bg);
+  font-family: $font-family-base;
+  color: var(--text);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}

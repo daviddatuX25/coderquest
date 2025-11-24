@@ -1,0 +1,16 @@
+@import './styles/dialog.scss';
+
+#game-container {
+    position: relative;
+    width: 800px; /* Match Phaser game width */
+    height: 600px; /* Match Phaser game height */
+    overflow: hidden; /* Hide any overflow from Phaser */
+    background-color: #000;
+}
+
+/* Ensure Phaser canvas is correctly positioned within its container */
+#phaser-game-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

@@ -1,0 +1,19 @@
+@use '../globals' as *;
+
+.sidebar {
+  width: 360px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: width .22s ease;
+  min-width: 80px;
+
+  &.collapsed {
+    width: 100px;
+  }
+
+  .panel {
+    @include panel;
+  }
+}

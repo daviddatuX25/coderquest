@@ -1,0 +1,32 @@
+@use '../globals' as *;
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.content-area {
+  flex: 1;
+  overflow: auto;
+  border-radius: 12px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+}
+
+.controls-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

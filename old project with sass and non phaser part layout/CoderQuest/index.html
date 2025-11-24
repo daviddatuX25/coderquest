@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CoderQuest</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0d1b2a, #1b263b, #0d1b2a);
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    .game-container {
+      background: #1e3a5f;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 900px;
+    }
+
+    .game-header {
+      font-size: 20px;
+      color: #e0eaff;
+      margin-bottom: 8px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    canvas {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-container">
+  <div class="game-header">🌌 CoderQuest Adventure</div>
+  <div id="phaser-game"></div>
+</div>
+
+<script>
+class CoderQuest extends Phaser.Scene {
+  constructor() {
+    super("CoderQuest");
+  }
+
+  preload() {
+    this.load.tilemapTiledJSON("woods_map", "woods_map.tmj");
+    this.load.image("woods_tileset", "woods_tileset.png");
+
+    this.load.spritesheet("player_idle", "assets/mainplayer/Idle.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+    this.load.spritesheet("player_walk", "assets/mainplayer/Walk.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+  }
+
+  create() {
+    const map = this.make.tilemap({ key: "woods_map" });
+    const tilesetName = map.tilesets[0].name;
+    const tileset = map.addTilesetImage(tilesetName, "woods_tileset");
+
+    map.layers.forEach(layerData => {
+      map.createLayer(layerData.name, tileset, 0, 0);
+    });
+
+    const obstacleLayer = map.getLayer("obstacles") ? map.getLayer("obstacles").tilemapLayer : null;
+    if (obstacleLayer) obstacleLayer.setCollisionByExclusion([-1]);
+
+    // Player
+    this.player = this.physics.add.sprite(100, 100, "player_idle");
+    this.player.setCollideWorldBounds(true);
+
+    this.anims.create({
+      key: "idle",
+      frames: this.anims.generateFrameNumbers("player_idle", { start: 0, end: 3 }),
+      frameRate: 6,
+      repeat: -1
+    });
+    this.anims.create({
+      key: "walk",
+      frames: this.anims.generateFrameNumbers("player_walk", { start: 0, end: 5 }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.player.play("idle");
+
+    if (obstacleLayer) this.physics.add.collider(this.player, obstacleLayer);
+
+    // Camera
+    this.cameras.main.startFollow(this.player);
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    this.cameras.main.setZoom(2);
+
+    // Controls
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.wasd = this.input.keyboard.addKeys("W,A,S,D");
+
+    // --- PORTAL FIX ---
+    // Invisible physics sprite for collision
+    this.portalZone = this.physics.add.staticImage(map.widthInPixels / 2, 100, null)
+      .setSize(64, 64)  // collider size
+      .setVisible(false); // stays invisible
+
+    // Visible glowing text for portal
+    this.portalText = this.add.text(map.widthInPixels / 2, 100, "🚪 PORTAL 🚪", {
+      fontSize: "28px",
+      fontStyle: "bold",
+      fill: "#ff0",
+      stroke: "#f00",
+      strokeThickness: 6,
+    }).setOrigin(0.5);
+
+    this.portalText.setShadow(2, 2, "#000", 4, true, true);
+
+    // Overlap detection
+    this.physics.add.overlap(this.player, this.portalZone, () => {
+      window.location.href = "Quest_level/index.html";
+    });
+  }
+
+  update() {
+    const speed = 120;
+    const body = this.player.body;
+    body.setVelocity(0);
+
+    let moving = false;
+
+    if (this.cursors.left.isDown || this.wasd.A.isDown) {
+      body.setVelocityX(-speed);
+      this.player.setFlipX(true);
+      moving = true;
+    } else if (this.cursors.right.isDown || this.wasd.D.isDown) {
+      body.setVelocityX(speed);
+      this.player.setFlipX(false);
+      moving = true;
+    }
+
+    if (this.cursors.up.isDown || this.wasd.W.isDown) {
+      body.setVelocityY(-speed);
+      moving = true;
+    } else if (this.cursors.down.isDown || this.wasd.S.isDown) {
+      body.setVelocityY(speed);
+      moving = true;
+    }
+
+    if (moving) {
+      this.player.play("walk", true);
+    } else {
+      this.player.play("idle", true);
+    }
+  }
+}
+
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  parent: "phaser-game",
+  physics: { default: "arcade", arcade: { debug: false } },
+  scene: [CoderQuest]
+};
+
+new Phaser.Game(config);
+</script>
+</body>
+</html>

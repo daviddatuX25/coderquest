@@ -1,0 +1,126 @@
+.dialog-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40vh;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.9) 0%,
+        rgba(0,0,0,0.7) 70%,
+        transparent 100%
+    );
+    z-index: 900;
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+    pointer-events: all; /* Allow interaction */
+}
+
+.dialog-box {
+    background: #2a2a2a;
+    border: 3px solid #4a4a4a;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    color: #fff; /* Ensure text is visible */
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .npc-portrait {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 2px solid #666;
+        object-fit: cover; /* Ensure image covers the area */
+    }
+
+    h3 {
+        color: #fff;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+}
+
+.dialog-text {
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    min-height: 4rem;
+    margin-bottom: 1rem;
+
+    .cursor {
+        animation: blink 1s infinite;
+        vertical-align: bottom; /* Align cursor with text */
+    }
+}
+
+.dialog-choices, .dialog-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem; /* Add some space above choices */
+
+    .choice-button {
+        background: #3a3a3a;
+        border: 2px solid #555;
+        color: #fff;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        width: 100%; /* Make buttons full width */
+        font-size: 1rem; /* Ensure readable font size */
+
+        &:hover {
+            background: #4a4a4a;
+            border-color: #777;
+            transform: translateX(5px);
+        }
+    }
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Base styles for the main app for context */
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent scrolling if game/UI exceeds viewport */
+    font-family: 'Press Start 2P', cursive; /* Example game font */
+}
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1a; /* Dark background for game */
+}
+
+#game-container {
+    position: relative;
+    width: 800px; /* Match Phaser game width */
+    height: 600px; /* Match Phaser game height */
+    overflow: hidden; /* Hide any overflow from Phaser */
+    background-color: #000;
+}
+
+/* Ensure Phaser canvas is correctly positioned within its container */
+#phaser-game-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

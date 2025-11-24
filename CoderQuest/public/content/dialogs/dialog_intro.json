@@ -1,0 +1,49 @@
+{
+  "dialogId": "dialog_intro",
+  "npcId": "npc_teacher_01",
+  "dialogTree": {
+    "start": {
+      "text": "Hello, adventurer! Welcome to CoderQuest. Are you ready to begin your journey?",
+      "choices": [
+        {
+          "text": "Yes, I am ready!",
+          "next": "ready_path"
+        },
+        {
+          "text": "Tell me more about CoderQuest.",
+          "next": "explain_coderquest"
+        },
+        {
+          "text": "Not right now.",
+          "next": "goodbye_path"
+        }
+      ]
+    },
+    "ready_path": {
+      "text": "Excellent! Your first quest awaits. Look for the glowing portal.",
+      "choices": [
+        {
+          "text": "Got it!",
+          "next": "end"
+        }
+      ]
+    },
+    "explain_coderquest": {
+      "text": "CoderQuest is a game where you learn coding concepts by completing quests. Each quest has lessons and quizzes to challenge you.",
+      "choices": [
+        {
+          "text": "Sounds interesting! I'm ready.",
+          "next": "ready_path"
+        },
+        {
+          "text": "I need more time to think.",
+          "next": "goodbye_path"
+        }
+      ]
+    },
+    "goodbye_path": {
+      "text": "No worries. Come back when you are ready to learn and explore!",
+      "choices": []
+    }
+  }
+}

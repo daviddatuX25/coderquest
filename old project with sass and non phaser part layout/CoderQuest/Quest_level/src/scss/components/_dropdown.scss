@@ -1,0 +1,27 @@
+@use '../globals' as *;
+.mobile-dropdown {
+  display: none;
+
+  @media (max-width: $bp-desktop) {
+    display: block;
+    position: relative;
+    margin-top: 8px;
+
+    .dropdown-panel {
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      @include panel;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+      z-index: 50;
+
+      .dropdown-header{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@use '../globals' as *;
+
+@media (max-width: 900px) {
+  .sidebar { display: none !important; }
+  .controls-desktop { display: none !important; }
+  .footer-mobile { display: block; margin-top: 12px; }
+  .app { padding: 12px; }
+}

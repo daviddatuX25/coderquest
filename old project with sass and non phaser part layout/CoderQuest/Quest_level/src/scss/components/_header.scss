@@ -1,0 +1,24 @@
+@use '../globals' as *;
+.header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.hamburger {
+  display: inline-flex;
+  @media (min-width: $bp-desktop) {
+    display: none;
+  }
+}
+
+.title {
+  flex: 1;
+  font-weight: 700;
+}
+
+.top-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

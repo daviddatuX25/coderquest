@@ -1,0 +1,28 @@
+// _variables.scss
+:root {
+  --bg: #0b1220;
+  --panel: rgba(12,16,24,0.92);
+  --muted: #9aa7bd;
+  --accent: #10b981;
+  --accent-2: #6366f1;
+  --text: #e6eef8;
+  --glass-border: rgba(148,163,184,0.10);
+  --radius: 14px;
+}
+
+$bg: #0b1220;
+$panel: rgba(12,16,24,0.92);
+$muted: #9aa7bd;
+$accent: #10b981;
+$accent-2: #6366f1;
+$text: #e6eef8;
+$glass-border: rgba(148,163,184,0.10);
+
+$font-family-base: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+$font-family-mono: 'Fira Code', 'Courier New', Courier, monospace;
+
+$radius: 14px;
+$sidebar-width: 360px;
+$sidebar-width-collapsed: 100px;
+
+$bp-desktop: 900px;
