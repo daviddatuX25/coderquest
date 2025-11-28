@@ -30,13 +30,20 @@ class QuestManager {
         this.currentMilestoneIndex = 0;
         
         EventBus.emit(EVENTS.QUEST_START, { quest: this.activeQuest });
-        this.showCurrentMilestone();
+        
+        // Emit quest:show-lesson with the full quest data to trigger LessonMode
+        if (quest.segments && quest.segments.length > 0) {
+            EventBus.emit('quest:show-lesson', { questId });
+        } else {
+            this.showCurrentMilestone();
+        }
     }
 
     showCurrentMilestone() {
         if (!this.activeQuest) return;
 
-        const milestone = this.activeQuest.milestones[this.currentMilestoneIndex];
+        const milestones = this.activeQuest.milestones || [];
+        const milestone = milestones[this.currentMilestoneIndex];
         if (!milestone) {
             this.completeQuest();
             return;

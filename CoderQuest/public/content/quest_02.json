@@ -6,23 +6,23 @@
     "xp": 150
   },
   "prerequisites": ["quest_01"],
-  "milestones": [
+  "segments": [
     {
-      "milestoneId": "lesson_functions_01",
-      "type": "lesson",
+      "id": "seg_02_functions",
       "title": "Introduction to Functions",
+      "type": "lesson",
       "content": "<h1>What are Functions?</h1><p>A <b>function</b> is a block of code designed to perform a particular task. A function is executed when something invokes it (calls it).</p><h2>Example:</h2><p><code>function greet(name) { return 'Hello, ' + name; }</code></p><p>This function, named 'greet', takes a 'name' and returns a greeting.</p>"
     },
     {
-      "milestoneId": "lesson_controlflow_01",
-      "type": "lesson",
+      "id": "seg_02_controlflow",
       "title": "Control Flow: If/Else",
+      "type": "lesson",
       "content": "<h1>What is Control Flow?</h1><p>In programming, <b>control flow</b> is the order in which statements are executed. The <code>if...else</code> statement executes a block of code if a specified condition is true. If the condition is false, another block of code can be executed.</p><h2>Example:</h2><p><code>if (score > 50) { status = 'Pass'; } else { status = 'Fail'; }</code></p>"
     },
     {
-      "milestoneId": "quiz_functions_01",
-      "type": "quiz",
+      "id": "seg_02_quiz",
       "title": "Quiz: Functions",
+      "type": "quiz",
       "questions": [
         {
           "questionText": "What is the main benefit of using a function?",
